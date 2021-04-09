@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fabriciolondero.RestAPISwagger.Models.Pessoa;
 import com.fabriciolondero.RestAPISwagger.Repositories.PessoaRepository;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(value = "Swagger2RestController", 
+	description = "REST APIs relacionada ao cadastro de PESSOAS")
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaController 
@@ -24,16 +29,17 @@ public class PessoaController
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
+	@ApiOperation(value = "Retorna as pessoas cadastradas", response = Iterable.class, tags = "getPessoas")
 	@GetMapping
 	public List<Pessoa> getPessoas()
 	{
 		return pessoaRepository.findAll();
 	}
 	
+	@ApiOperation(value = "Retorna a pessoa com o ID informado", response = Iterable.class, tags = "getPessoas")
 	@GetMapping("/{id}")
 	Pessoa getPessoa(@PathVariable Long id) 
 	{
-		
 		try
 		{
 			return pessoaRepository.getOne(id);
@@ -44,6 +50,7 @@ public class PessoaController
 		}
 	}
 
+	@ApiOperation(value = "Cadastra uma nova pessoa e recebe-a como retorno", response = Iterable.class, tags = "adicionar")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Pessoa adicionar(@RequestBody Pessoa pessoa)
@@ -51,12 +58,14 @@ public class PessoaController
 		return pessoaRepository.save(pessoa);
 	}
 	
+	@ApiOperation(value = "Exclui a pessoa do ID informado", response = Iterable.class, tags = "deletar")
 	@DeleteMapping("/{id}")
 	void deletePessoa(@PathVariable Long id) 
 	{
 		pessoaRepository.deleteById(id);
 	}
 	
+	@ApiOperation(value = "Altera uma pessoa, recebendo uma pessoa e o ID por parametro. Retorna a nova pessoa.", response = Iterable.class, tags = "alterar")
 	@PutMapping("/{id}")
 	Pessoa updatePessoa(@RequestBody Pessoa novaPessoa, @PathVariable Long id) 
 	{
